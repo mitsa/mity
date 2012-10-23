@@ -1,0 +1,37 @@
+/* Less than 600px */
+	body { background: fuchsia;}
+
+	fieldset{background:#fff550;width:300px;margin:250px auto;}
+
+	.main{width:700px;margin:50px 400px;background:#fff100;padding:30px;font-size:20px;}
+
+	
+/* Minimum width of 600 pixels. */
+@media screen and (min-width: 600px)
+	{
+		body { background: blue;}
+		fieldset{background:#111777;width:300px;margin:250px auto;}
+	}
+
+	
+/* Minimum width of 960 pixels. */
+@media screen and (min-width: 960px)
+	{
+		body { background:red;	}
+		fieldset{background:#333333;width:300px;margin:250px auto;}
+	}
+
+	
+	
+	
+/* Print */
+	@media print {
+		body { background: none !important;}
+	}
+
+	img
+	{
+	max-width:100%;
+	height:auto;
+	}
+

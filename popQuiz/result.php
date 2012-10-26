@@ -1,15 +1,7 @@
-<?php
-if(isset($_GET['qn']))
-{
-$tq=$_GET['qn'];
-
-}
-?>
 <html>
 <head>
 <title>Quiz</title>
 <style>
-body{background-image:url(examResult.jpg);}
 #box{width:700px;margin:50px 400px;background:#fff000;padding:30px;font-size:20px;}
 </style>
 </head>
@@ -17,26 +9,17 @@ body{background-image:url(examResult.jpg);}
 <div id="box">
 <?php
 $db=mysqli_connect("localhost","root","","popquiz");
-$sql="SELECT `answer`,`correct` FROM `answer`INNER JOIN `questions`
-ON `answer`.`qID`= `questions`.`qID`
-ORDER BY `answerID` DESC LIMIT 0,$tq ";
-
+$sql="SELECT `answerID` , `answer`
+FROM `answer`
+INNER JOIN `questions` ON `answer`.`qID` = `questions`.`qID`
+WHERE `questions`.`correct` = `answer`.`answer`
+ORDER BY `answerID` DESC LIMIT 0,10 ";
 $res=mysqli_query($db,$sql);
-$right=0;
-while($row= mysqli_fetch_assoc($res))
-{
- if($row['answer']==$row['correct'])
-   {
-   $right++;
-  
-   }
-
-}
-
-$right=ceil(($right*100)/$tq);
+$right =mysqli_num_rows($res);
+$right=$right*10;
 if ($right<60)
 {
-echo "<h1>".$right."%"." not good!!</h1>";
+echo $right."%"."<h1> Try again!!</h1>";
 }
 elseif($right<95)
 {

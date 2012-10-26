@@ -3,11 +3,11 @@ if(isset($_POST['user']))
 {
 	if(empty($_POST['user']))
 		{ 
-			echo "you forgot username";
+			echo "<h1>you forgot username</h1>";
 		}
 	elseif(empty($_POST['pass']))
 	   { 
-	     echo "you forgot password";
+	     echo "<h1>you forgot password</h1>";
 	   }
 	else
 	   {
@@ -22,7 +22,7 @@ if(isset($_POST['user']))
 			$finns=mysqli_num_rows($res);
 			if($finns!=0)
 				{
-					echo "<h3 style='color:red;>OBS!Använda namn finns!!!</h3> ";
+					echo "<h1>OBS!Användanamn finns,välja en till !!!</h1>";
 				}
 			else
 				{
@@ -37,7 +37,7 @@ if(isset($_POST['user']))
 
 					$sql="INSERT INTO `loggin`( `pass`, `username`) VALUES ('$pass','$user')";
 					mysqli_query($db,$sql);
-					echo "welcome  ".$user." You can <a href=loggain.php> log in here </a>  ";
+					echo "<h1>welcome  ".$user."You can <a href=loggain.php> log in here </a> </h1>  ";
 				}
 		}
 }

@@ -18,7 +18,8 @@
 @media screen and (min-width: 960px)
 	{
 		body { background:red;	}
-		fieldset{background:#333333;width:300px;margin:250px auto;}
+		fieldset{background:#fff;width:300px;margin:250px auto;}
+		p{font-size:20px;}
 	}
 
 	

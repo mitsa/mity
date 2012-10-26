@@ -2,7 +2,10 @@
 if(isset($_GET['testId']))
 {
 $lastTsetId=$_GET['testId'];
-echo $lastTsetId;
+$totaltQ=$_GET['total'];
+$examN=$_GET['testName'];
+$exTime=$_GET['exTime'];
+
 }
 
 ?>
@@ -14,25 +17,25 @@ echo $lastTsetId;
 
 <form action="makeQuestion.php" method="post" enctype="multipart/form-data" >
 
-Test Name: <?php testName() ?> <br>
-Total queston:<?php echo totalQuestion(); ?><br>
-Exam time:<?php examTime(); ?> <br>
+Test Name: <?php echo $examN; ?> <br>
+Total queston:<?php echo$totaltQ; ?><br>
+Exam time:<?php echo $exTime; ?> <br>
 
-
+<input type="hidden" name="total" value="<?php echo $totaltQ;?>" >
 
 <?php 
- $total=totalQuestion();
+ $total=$totaltQ;
  echo  $total;
 for($i=1;$i<=$total;$i++) { ?>
 
 	<fieldset>
-		<input type="file" name="filen"> <br> 
+		<input type="file" name="filen<?php echo $i; ?>"> <br> 
 
-		Q<?php echo $i ?>)<input type="text" name="question" size="150"> <br>
-		a)<input type="text" name="optionA" size="150"> <br>
-		b)<input type="text" name="optionB" size="150"> <br>
-		c)<input type="text" name="optionC" size="150"> <br>
-		Answer is:<input type="text" name="correct" size="50"><br>
+		Q<?php echo $i ?>)<input type="text" name="question[]" size="150"> <br>
+		a)<input type="text" name="optionA<?php echo $i; ?>" size="150"> <br>
+		b)<input type="text" name="optionB<?php echo $i; ?>" size="150"> <br>
+		c)<input type="text" name="optionC<?php echo $i; ?>" size="150"> <br>
+		Answer is:<input type="text" name="correct<?php echo $i; ?>" size="50"><br>
 		<input type="hidden" value="<?php echo $lastTsetId?>" name="testId">
 	</fieldset>
 	
@@ -45,82 +48,47 @@ for($i=1;$i<=$total;$i++) { ?>
 
 <?php
 $dbConn = mysqli_connect("localhost", "root", "", "popquiz");
- if(isset($_POST['send']))
+if(isset($_POST['send']))
   {
-    for($i=1;$i<=$total;$i++) 
-	 {
   
-		if (isset($_FILES['filen']))
-		{
-			if (checkImage($_FILES['filen']['tmp_name']) )
+  $counter = 1;
+  foreach ( $_POST['question'] as $q  => $queryText)
+	{	
+		echo "<hr>värde: $q .$queryText"  ;
+		$opA=$_POST['optionA'.$counter];
+		$opB=$_POST['optionB'.$counter];
+		$opC=$_POST['optionC'.$counter];
+		$right=$_POST['correct'.$counter];
+		$testId=$_POST['testId'];
+			if (checkImage($_FILES['filen']['tmp_name'].$counter) )
 				{
-					$img = file_get_contents($_FILES['filen']['tmp_name']);
-					$img = mysqli_real_escape_string($dbConn, $img);
+					$img = file_get_contents($_FILES['filen']['tmp_name'].$counter);
+					$img = mysqli_real_escape_string($dbConn, $img);	
 				}
-				else
+			else
 				{
-					echo "flie is not picture";
-					break;
+					$img="";
+					//echo "flie is not picture";
 				}
+
+			$sql = "INSERT INTO `questions`(`question`, `option1`, `option2`, `option3`, `picture`, `correct`,`testID`)VALUES ('$queryText','$opA','$opB','$opC','$img','$right',$testId)";
 				
-				$ques=$_POST['question'];
-				$opA=$_POST['optionA'];
-				$opB=$_POST['optionB'];
-				$opC=$_POST['optionC'];
-				$right=$_POST['correct'];
-				$testId=$_POST['testId'];
-				$sql = "INSERT INTO `questions`(`question`, `option1`, `option2`, `option3`, `picture`, `correct`,`testID`)VALUES ('$ques','$opA','$opB','$opC','$img','$right',$testId)";
+			echo "<p>" . $sql . "</p>";	
+				
 				mysqli_query($dbConn, $sql);
-				header("Location:printscreen.php");
 				
-		}
-	
+				
+	$counter++;
 	}
+header("Location:printscreen.php");
  }
-
  
-
-function examTime()
-{
-global $lastTsetId;
-$db=mysqli_connect("localhost","root","","popquiz");
-$sql="SELECT `examTime` FROM `abouttest` WHERE testID=$lastTsetId ";
-$res=mysqli_query($db,$sql);
-$row=mysqli_fetch_assoc($res);
-$examtime=$row['examTime'];
-echo $examtime;
-}
-
-
-function totalQuestion()
-{
-global $lastTsetId;
-$db=mysqli_connect("localhost","root","","popquiz");
-$sql="SELECT `totalQuestion` FROM `abouttest` WHERE testID=$lastTsetId";
-$res=mysqli_query($db,$sql);
-$row=mysqli_fetch_assoc($res);
-$totalQ=$row['totalQuestion'];
-return  $totalQ;
-}
-
-function testName()
-{
-global $lastTsetId;
-$db=mysqli_connect("localhost","root","","popquiz");
-$sql="SELECT `testName` FROM `abouttest` WHERE testID=$lastTsetId";
-$res=mysqli_query($db,$sql);
-$row=mysqli_fetch_assoc($res);
-$testName=$row['testName'];
-echo $testName;
-}
 
 function checkImage($file)
 {
 	$check = getimagesize($file);
 	return $check;
 }
-
-
 
 
 ?>

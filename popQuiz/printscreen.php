@@ -1,22 +1,17 @@
-<?php 
-session_start();
-
-echo $_SESSION['x'];
-
-?>
 <html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
 <body>
-Test send!!!
+<fieldset>
+<h1>Provet skickade!!!</h1>
 
-<p> <a href="loggain.php">New test</a> </p>
+<p> <a href="loggaut.php">logga ut </a> </P>
 
-<p> <a href="printscreen.php"> logga ut </a> </P>
-
-
+</fieldset>
 </body>
 </html>
 <?php 
 
-session_destroy();
 
 ?>

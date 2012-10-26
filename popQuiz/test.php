@@ -9,6 +9,7 @@
 <body>
 
 <fieldset>
+<legend><h1>Register Test</h1></legend>
 <form action="test.php" method="post">
 
 test name:<input type="text" name="testName" > <br>
@@ -40,9 +41,9 @@ $query = "SELECT LAST_INSERT_ID() AS `id` FROM `abouttest` ";
 $result = mysqli_query($db,$query);
 $row= mysqli_fetch_assoc($result);
 $lastTsetId = $row["id"];
-echo $lastTsetId;
 
-header("Location:makeQuestion.php?testId='$lastTsetId'");
+
+header("Location:makeQuestion.php?testId=$lastTsetId&total=$totalQ&exTime=$examtime&testName=$testName");
 }
 
 
